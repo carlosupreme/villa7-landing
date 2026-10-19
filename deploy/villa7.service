@@ -2,7 +2,7 @@
 Description=Villa 7 landing (static)
 
 [Service]
-WorkingDirectory=/home/carlos/software/villa7
+WorkingDirectory=/home/carlos/software/villa7/dist
 ExecStart=/usr/bin/python3 -m http.server 8087 --bind 127.0.0.1
 Restart=always
 
