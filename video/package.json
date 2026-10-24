@@ -1,0 +1,17 @@
+{
+  "name": "villa7-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.jsx",
+    "render:hero": "remotion render src/index.jsx HeroLoop out/hero.mp4",
+    "render:promo": "remotion render src/index.jsx Promo out/promo.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.538",
+    "@remotion/fonts": "^4.0.538",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.538"
+  }
+}
