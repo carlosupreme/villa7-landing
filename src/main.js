@@ -22,18 +22,50 @@ if (!reduce) {
     }))
 }
 
-/* Hero: the one orchestrated entrance */
+// Lets the hero fill the viewport below the header on load, so its CTA is above the fold
+const setNavHeight = () =>
+  document.documentElement.style.setProperty('--nav-h', `${document.querySelector('.nav').offsetHeight}px`)
+setNavHeight()
+addEventListener('resize', setNavHeight)
+
+/* Hero: the one orchestrated entrance, then the graded clip is scrubbed by scroll.
+   The clip is played from a Blob URL so it is always seekable (static hosts may not
+   serve byte ranges) and seeks are coalesced so fast flicks can't stall the decoder. */
 function hero() {
   const h1 = document.querySelector('[data-split]')
   if (reduce) return
   const split = SplitText.create(h1, { type: 'lines', mask: 'lines', autoSplit: true })
   gsap.timeline({ defaults: { ease: 'power4.out' } })
     .from(split.lines, { yPercent: 110, duration: 1.1, stagger: 0.12 }, 0.2)
-    .from('.hero-sub, .hero .pill', { opacity: 0, y: 16, duration: 0.8, stagger: 0.1 }, 0.9)
-  gsap.to('.hero-video', {
-    scale: 1.12, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+    // Explicit end values + clearProps: .pill's CSS opacity transition made a plain from() settle at 0
+    .fromTo('.hero-sub, .hero .pill', { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, clearProps: 'opacity,transform' }, 0.9)
+
+  const video = document.querySelector('.hero-video')
+  const state = { progress: 0, time: 0 }
+  fetch(`${import.meta.env.BASE_URL}video/hero-scrub.mp4`)
+    .then((r) => r.blob())
+    .then((b) => {
+      video.src = URL.createObjectURL(b)
+      // iOS paints nothing until a video has played once
+      video.play().then(() => video.pause()).catch(() => {})
+    })
+  gsap.ticker.add(() => {
+    if (!video.duration || video.seeking) return
+    const target = state.progress * (video.duration - 0.05)
+    state.time += (target - state.time) * 0.3
+    if (Math.abs(video.currentTime - state.time) > 0.01) video.currentTime = state.time
   })
+
+  gsap.timeline({
+    scrollTrigger: {
+      trigger: '.hero', start: 'top top', end: '+=180%', pin: true, scrub: true,
+      onUpdate: (st) => { state.progress = st.progress },
+    },
+  })
+    .to('.hero-video', { scale: 1.06, ease: 'none', duration: 1 }, 0)
+    .to('.hero .scroll-hint', { opacity: 0, duration: 0.1 }, 0.05)
+    .to('.hero-copy', { opacity: 0, y: -60, ease: 'power2.in', duration: 0.25 }, 0.75)
 }
 
 /* Statement: words darken as you scroll through them */
@@ -85,11 +117,15 @@ function court() {
     images[i] = img
   }
   load(0)
-  for (let i = 1; i < FRAMES; i += 1) setTimeout(() => load(i), 0)
   addEventListener('resize', size)
   size()
 
   if (reduce) return
+  // The rest of the ~8 MB sequence only downloads once the visitor heads toward the court
+  ScrollTrigger.create({
+    trigger: '#cancha', start: 'top bottom+=150%', once: true,
+    onEnter: () => { for (let i = 1; i < FRAMES; i += 1) load(i) },
+  })
   const caps = gsap.utils.toArray('.cap')
   const tl = gsap.timeline({
     scrollTrigger: { trigger: '#cancha', start: 'top top', end: '+=420%', pin: true, scrub: 0.6 },

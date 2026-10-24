@@ -24,10 +24,10 @@ h1,h2,h3{font-weight:500;line-height:1.05}
 
 .dark{background:var(--ink);color:#fff}
 
-.hero{position:relative;overflow:hidden;min-height:92vh;display:flex;align-items:flex-end;padding:48px}
+.hero{position:relative;overflow:hidden;height:100vh;height:100svh;display:flex;align-items:flex-end;padding:48px 48px calc(48px + var(--nav-h,0px))}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,.82),rgba(17,17,17,.05) 62%)}
-.hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
 .hero h1{font-family:var(--display);font-size:clamp(34px,8.5vw,112px);line-height:.98;text-transform:uppercase;margin-bottom:4px}
 .hero-sub{font-size:20px;font-weight:500}
 
@@ -41,7 +41,7 @@ h1,h2,h3{font-weight:500;line-height:1.05}
 .cap{position:absolute;left:0;bottom:0;max-width:520px}
 .cap h2{font-family:var(--display);font-size:clamp(36px,5.5vw,76px);text-transform:uppercase;margin-bottom:12px}
 .cap p{font-size:20px;max-width:420px}
-.scroll-hint{position:absolute;left:50%;bottom:24px;width:1px;height:40px;background:rgba(255,255,255,.35);overflow:hidden}
+.scroll-hint{z-index:2;position:absolute;left:50%;bottom:24px;width:1px;height:40px;background:rgba(255,255,255,.35);overflow:hidden}
 .scroll-hint span{display:block;width:100%;height:50%;background:#fff;animation:hint 1.6s ease-in-out infinite}
 @keyframes hint{from{transform:translateY(-100%)}to{transform:translateY(200%)}}
 
@@ -78,7 +78,7 @@ footer{max-width:1440px;margin:0 auto;padding:var(--gap)}
 @media(max-width:800px){
   .util span:last-child,.main ul{display:none}
   .util,.main{padding-left:20px;padding-right:20px}
-  .hero{padding:24px 20px}
+  .hero{padding:24px 20px calc(32px + var(--nav-h,0px))}
   .statement{padding:80px 20px}
   .caps{left:20px;right:20px;bottom:48px}
   .sec-title{padding:0 20px}
@@ -88,7 +88,7 @@ footer{max-width:1440px;margin:0 auto;padding:var(--gap)}
 }
 @media(prefers-reduced-motion:reduce){
   .hero-video{display:none}
-  .hero{background:url(/video/hero-poster.jpg) center/cover}
+  .hero{background:url(/video/hero-scrub-poster.jpg) center/cover;height:auto;min-height:80vh;padding-bottom:48px}
   .scrub{height:70vh}
   .caps .cap:not(:first-child){display:none}
   .scroll-hint span{animation:none}

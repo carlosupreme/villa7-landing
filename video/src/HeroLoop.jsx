@@ -35,3 +35,12 @@ export const HeroLoop = () => {
     </AbsoluteFill>
   )
 }
+
+/* Scroll-scrubbed variant: every source frame at normal speed, no push or loop tail
+   (scroll drives time), and no grain, which would freeze into dirt when scrolling stops. */
+export const HeroScrub = () => (
+  <AbsoluteFill style={{ background: '#111' }}>
+    <OffthreadVideo src={staticFile('video/hero.mp4')} muted style={{ width: '100%', height: '100%', objectFit: 'cover', filter: gradeFilter }} />
+    <Look grain={0} />
+  </AbsoluteFill>
+)
