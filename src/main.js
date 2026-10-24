@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 const FRAMES = 135
-const frameUrl = (i) => `/frames/f_${String(i + 1).padStart(4, '0')}.webp`
+const frameUrl = (i) => `${import.meta.env.BASE_URL}frames/f_${String(i + 1).padStart(4, '0')}.webp`
 
 if (!reduce) {
   const lenis = new Lenis({ lerp: 0.1 })
